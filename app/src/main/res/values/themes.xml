@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base theme. Compose drives the real styling; this keeps splash/system bars consistent. -->
+    <style name="Theme.DailyStrength" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@color/ds_background</item>
+        <item name="android:navigationBarColor">@color/ds_background</item>
+        <item name="android:windowBackground">@color/ds_background</item>
+    </style>
+</resources>
