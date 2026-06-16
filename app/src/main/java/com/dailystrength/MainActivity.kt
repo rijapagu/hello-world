@@ -1,9 +1,14 @@
 package com.dailystrength
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +23,7 @@ import com.dailystrength.presentation.StartDestination
 import com.dailystrength.presentation.navigation.DailyStrengthNavHost
 import com.dailystrength.presentation.navigation.Routes
 import com.dailystrength.presentation.theme.DailyStrengthTheme
+import com.dailystrength.work.HealthSyncWorker
 import com.dailystrength.work.StreakReminderWorker
 import com.dailystrength.work.WidgetRefreshWorker
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,11 +34,17 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val notificationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* best-effort */ }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         WidgetRefreshWorker.schedule(applicationContext)
         StreakReminderWorker.schedule(applicationContext)
+        HealthSyncWorker.schedule(applicationContext)
+        requestNotificationPermissionIfNeeded()
 
         val autoStartWorkout = intent?.data?.host == "start"
 
@@ -55,5 +67,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    /** Streak reminders need POST_NOTIFICATIONS on Android 13+. Asked once, non-blocking. */
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val granted = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+        if (!granted) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 }

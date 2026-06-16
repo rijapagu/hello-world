@@ -26,15 +26,18 @@ Estado: **F0 en curso** (esta sesión establece la base funcional offline-first)
 - [x] Sistema de avatar (Ready Player Me) con evolución por hitos + render 2D (Coil) + conexión de avatar
 - [x] Animación de demostración por ejercicio (esquemática, dependency-free) con replay
 - [x] Capa Samsung Health (`HealthDataSource` + Noop por defecto) conectada al motor de generación
-- [ ] Avatar 3D interactivo (SceneView/Filament cargando el `.glb`, rotar/zoom) — drop-in tras `AvatarProvider`
-- [ ] Animaciones glTF reales de ejercicios (pipeline de assets) tras `ExerciseAnimationPlayer`
-- [ ] `SamsungHealthDataSource` real (requiere AAR propietaria + aprobación de partner) + HealthSyncWorker
+- [x] Avatar 3D interactivo (SceneView/Filament cargando el `.glb`, rotar/zoom/pan) vía `Model3dView`
+- [x] Render 3D de ejercicios cuando `animationRef` es glb URL (infra lista; faltan assets glTF reales)
+- [x] `HealthSyncWorker` + permiso POST_NOTIFICATIONS; `HealthDataSource` conectado al motor
+- [ ] `SamsungHealthDataSource` real — **acción del propietario**: requiere AAR propietaria + aprobación de partner de Samsung
+- [ ] Assets glTF por ejercicio — **acción del propietario**: producción de contenido 3D
 - [x] Backend proxy del AI Coach (Ktor + SDK Anthropic, modelo claude-opus-4-8) en [`/backend`](backend/README.md)
 
 ## Fase 3 — Escala y pulido
 - [x] Pantalla de perfil/ajustes (editar perfil, toggle de IA, cerrar sesión Google)
 - [x] Recordatorios de racha en riesgo (StreakNotifier + StreakReminderWorker)
-- [x] Tests: repositorios (Robolectric + Room), AI Coach (Ktor MockEngine), UI (Compose) + Detekt
+- [x] Tests: repositorios (Robolectric + Room), AI Coach (Ktor MockEngine), generación de workout con fakes, UI (Compose) + Detekt
+- [x] Accesibilidad inicial (contentDescription en controles clave)
 - [x] CI: GitHub Actions (Detekt + unit tests + assembleDebug + artefacto APK)
 - [ ] Modularización Gradle (`:core:*`, `:feature:*`)
 - [ ] Avatar generado por IA / animaciones generadas por IA

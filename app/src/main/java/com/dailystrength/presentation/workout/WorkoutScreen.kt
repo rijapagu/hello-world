@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -156,22 +158,24 @@ private fun ExerciseView(
 @Composable
 private fun RepCounter(reps: Int, onIncrement: () -> Unit, onDecrement: () -> Unit, target: Int?) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-        RoundButton("−", onDecrement)
+        RoundButton("−", "Quitar repetición", onDecrement)
         Spacer(Modifier.width(24.dp))
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("$reps", color = MaterialTheme.colorScheme.primary, fontSize = 72.sp, fontWeight = FontWeight.Black)
             Text("reps" + (target?.let { " · objetivo $it" } ?: ""), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
         }
         Spacer(Modifier.width(24.dp))
-        RoundButton("+", onIncrement)
+        RoundButton("+", "Añadir repetición", onIncrement)
     }
 }
 
 @Composable
-private fun RoundButton(label: String, onClick: () -> Unit) {
+private fun RoundButton(label: String, contentDescription: String, onClick: () -> Unit) {
     FilledTonalButton(
         onClick = onClick,
-        modifier = Modifier.size(64.dp),
+        modifier = Modifier
+            .size(64.dp)
+            .semantics { this.contentDescription = contentDescription },
         shape = CircleShape,
         contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
     ) {
