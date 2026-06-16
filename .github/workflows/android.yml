@@ -42,6 +42,10 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Static analysis (Detekt)
+        continue-on-error: true
+        run: ./gradlew --no-daemon detekt
+
       - name: Run unit tests
         run: ./gradlew --no-daemon testDebugUnitTest
 

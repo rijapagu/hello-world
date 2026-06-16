@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -54,7 +55,15 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true // required by Robolectric
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    // Reporting mode for now: surface findings in CI without blocking the build. Tighten later.
+    ignoreFailures = true
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
 }
 
 dependencies {
@@ -123,6 +132,10 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.room.testing)
     testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.core.ktx)
+    testRuntimeOnly(libs.junit.vintage.engine)
 
     // Instrumented / UI tests
     androidTestImplementation(libs.androidx.junit)
