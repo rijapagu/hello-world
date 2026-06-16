@@ -20,12 +20,15 @@ Estado: **F0 en curso** (esta sesión establece la base funcional offline-first)
 - [x] WorkoutCompleteScreen con celebración de streak
 - [x] Pantalla de estadísticas con gráficas de progresión (Dominadas/Flexiones/Fondos/Ab Wheel)
 - [x] DataStore de preferencias + feature flags
-- [ ] Pantalla de librería de ejercicios + detalle (con instrucciones y errores comunes)
+- [x] Pantalla de librería de ejercicios + detalle (instrucciones, errores comunes, músculos, equipo)
 
 ## Fase 2 — Enriquecedores
-- [ ] Samsung Health SDK real (steps + sesiones tennis/padel) + HealthSyncWorker
-- [ ] Avatar 3D Ready Player Me (SceneView/Filament) + evolución por hitos
-- [ ] Animaciones 3D de ejercicios (glTF) con controles cámara/zoom/replay
+- [x] Sistema de avatar (Ready Player Me) con evolución por hitos + render 2D (Coil) + conexión de avatar
+- [x] Animación de demostración por ejercicio (esquemática, dependency-free) con replay
+- [x] Capa Samsung Health (`HealthDataSource` + Noop por defecto) conectada al motor de generación
+- [ ] Avatar 3D interactivo (SceneView/Filament cargando el `.glb`, rotar/zoom) — drop-in tras `AvatarProvider`
+- [ ] Animaciones glTF reales de ejercicios (pipeline de assets) tras `ExerciseAnimationPlayer`
+- [ ] `SamsungHealthDataSource` real (requiere AAR propietaria + aprobación de partner) + HealthSyncWorker
 - [ ] Backend proxy del AI Coach (seguro, sin claves en cliente)
 
 ## Fase 3 — Escala y pulido

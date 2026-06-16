@@ -5,6 +5,12 @@ object Routes {
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
     const val STATS = "stats"
+    const val LIBRARY = "library"
+    const val AVATAR = "avatar"
+
+    const val EXERCISE_DETAIL = "exercise/{exerciseId}"
+    fun exerciseDetail(exerciseId: String) = "exercise/$exerciseId"
+    const val ARG_EXERCISE_ID = "exerciseId"
 
     const val WORKOUT = "workout/{workoutId}"
     fun workout(workoutId: Long) = "workout/$workoutId"

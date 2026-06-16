@@ -41,6 +41,8 @@ fun DashboardScreen(
     autoStart: Boolean = false,
     onOpenWorkout: (Long) -> Unit = {},
     onOpenStats: () -> Unit = {},
+    onOpenLibrary: () -> Unit = {},
+    onOpenAvatar: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -73,6 +75,8 @@ fun DashboardScreen(
                 onStart = viewModel::onStartClicked,
                 onContinue = viewModel::onContinueWorkout,
                 onOpenStats = onOpenStats,
+                onOpenLibrary = onOpenLibrary,
+                onOpenAvatar = onOpenAvatar,
             )
         }
     }
@@ -89,6 +93,8 @@ private fun DashboardContent(
     onStart: () -> Unit,
     onContinue: () -> Unit,
     onOpenStats: () -> Unit,
+    onOpenLibrary: () -> Unit,
+    onOpenAvatar: () -> Unit,
 ) {
     Text(text = "🔥", fontSize = 40.sp)
     Text(
@@ -152,8 +158,10 @@ private fun DashboardContent(
     }
 
     Spacer(Modifier.height(16.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        TextButton(onClick = onOpenStats) { Text("Ver estadísticas") }
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        TextButton(onClick = onOpenStats) { Text("Estadísticas") }
+        TextButton(onClick = onOpenLibrary) { Text("Librería") }
+        TextButton(onClick = onOpenAvatar) { Text("Avatar") }
     }
 }
 

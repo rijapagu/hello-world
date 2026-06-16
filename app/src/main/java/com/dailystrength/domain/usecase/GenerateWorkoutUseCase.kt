@@ -5,6 +5,7 @@ import com.dailystrength.domain.model.UserProfile
 import com.dailystrength.domain.model.Workout
 import com.dailystrength.domain.model.WorkoutContext
 import com.dailystrength.domain.model.WorkoutPlan
+import com.dailystrength.domain.health.HealthDataSource
 import com.dailystrength.domain.repository.AiCoachRepository
 import com.dailystrength.domain.repository.ExerciseRepository
 import com.dailystrength.domain.repository.UserRepository
@@ -26,6 +27,7 @@ class GenerateWorkoutUseCase @Inject constructor(
     private val workoutRepository: WorkoutRepository,
     private val aiCoachRepository: AiCoachRepository,
     private val generator: WorkoutGenerator,
+    private val healthDataSource: HealthDataSource,
     private val dateProvider: DateProvider,
 ) {
     /**
@@ -44,14 +46,23 @@ class GenerateWorkoutUseCase @Inject constructor(
         val profile = userRepository.getProfile() ?: UserProfile.DEFAULT
         val library = exerciseRepository.getAll()
 
+        // Samsung Health can auto-fill the sport the user didn't report, and provide step context.
+        val effectiveSport = if (sportToday == SportContext.NONE) {
+            runCatching { healthDataSource.detectSport(today) }.getOrNull() ?: SportContext.NONE
+        } else {
+            sportToday
+        }
+        val steps = runCatching { healthDataSource.dailySteps(today) }.getOrNull()
+
         val recent = workoutRepository.recentCategories(beforeEpochDay = today, limit = 4)
         val context = WorkoutContext(
             profile = profile,
-            sportToday = sportToday,
-            suggestedCategory = CategoryRotation.suggestCategory(recent, sportToday),
+            sportToday = effectiveSport,
+            suggestedCategory = CategoryRotation.suggestCategory(recent, effectiveSport),
             recentCategories = recent,
             recentBestReps = workoutRepository.recentBestReps(),
             todayEpochDay = today,
+            dailyStepCount = steps,
         )
 
         val plan = resolvePlan(context, profile, library)

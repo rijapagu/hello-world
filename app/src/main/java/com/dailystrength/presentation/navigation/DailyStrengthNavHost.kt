@@ -6,7 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dailystrength.presentation.avatar.AvatarScreen
 import com.dailystrength.presentation.dashboard.DashboardScreen
+import com.dailystrength.presentation.library.ExerciseDetailScreen
+import com.dailystrength.presentation.library.LibraryScreen
 import com.dailystrength.presentation.onboarding.OnboardingScreen
 import com.dailystrength.presentation.stats.StatsScreen
 import com.dailystrength.presentation.workout.WorkoutCompleteScreen
@@ -40,6 +43,8 @@ fun DailyStrengthNavHost(
                 autoStart = autoStartWorkout,
                 onOpenWorkout = { workoutId -> navController.navigate(Routes.workout(workoutId)) },
                 onOpenStats = { navController.navigate(Routes.STATS) },
+                onOpenLibrary = { navController.navigate(Routes.LIBRARY) },
+                onOpenAvatar = { navController.navigate(Routes.AVATAR) },
             )
         }
 
@@ -69,6 +74,23 @@ fun DailyStrengthNavHost(
 
         composable(Routes.STATS) {
             StatsScreen()
+        }
+
+        composable(Routes.LIBRARY) {
+            LibraryScreen(
+                onOpenExercise = { exerciseId -> navController.navigate(Routes.exerciseDetail(exerciseId)) },
+            )
+        }
+
+        composable(
+            route = Routes.EXERCISE_DETAIL,
+            arguments = listOf(navArgument(Routes.ARG_EXERCISE_ID) { type = NavType.StringType }),
+        ) {
+            ExerciseDetailScreen()
+        }
+
+        composable(Routes.AVATAR) {
+            AvatarScreen()
         }
     }
 }
