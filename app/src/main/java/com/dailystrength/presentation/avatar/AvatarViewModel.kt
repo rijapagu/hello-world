@@ -29,6 +29,7 @@ data class AvatarUiState(
     val longestStreak: Int = 0,
     val avatarId: String? = null,
     val renderUrl: String? = null,
+    val glbUrl: String? = null,
     val editorUrl: String = "",
     val milestones: List<MilestoneUi> = emptyList(),
 )
@@ -52,6 +53,7 @@ class AvatarViewModel @Inject constructor(
             longestStreak = snapshot.streak.longestStreak,
             avatarId = avatarId,
             renderUrl = avatarProvider.renderUrl(avatarId, stage),
+            glbUrl = avatarProvider.glbUrl(avatarId),
             editorUrl = avatarProvider.editorUrl(),
             milestones = AvatarStage.entries.map { s ->
                 MilestoneUi(

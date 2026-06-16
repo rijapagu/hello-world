@@ -14,6 +14,12 @@ interface AvatarProvider {
      */
     fun renderUrl(avatarId: String?, stage: AvatarStage): String?
 
+    /**
+     * URL of the interactive 3D model (glTF/glb) for the connected avatar, or null when none is
+     * connected. Consumed by the SceneView-backed renderer for rotate/zoom.
+     */
+    fun glbUrl(avatarId: String?): String?
+
     /** URL of the web avatar creator/editor, where the user creates or updates their avatar. */
     fun editorUrl(): String
 

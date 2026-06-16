@@ -51,12 +51,25 @@ fun ExerciseAnimationPlayer(
     // `replayKey` restarts the looping transition when the user taps replay.
     var replayKey by remember { mutableIntStateOf(0) }
 
+    // A real glTF/glb asset (URL or .glb path) renders in interactive 3D; otherwise we fall back to
+    // the dependency-free schematic so every exercise always has a working demonstration.
+    val is3d = animationRef != null &&
+        (animationRef.startsWith("http") || animationRef.endsWith(".glb"))
+
     Box(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)),
         contentAlignment = Alignment.Center,
     ) {
-        AnimatedFigure(replayKey = replayKey, modifier = Modifier.fillMaxSize().padding(20.dp))
+        if (is3d) {
+            Model3dView(
+                modelUrl = animationRef!!,
+                modifier = Modifier.fillMaxSize().padding(8.dp),
+                replayKey = replayKey,
+            )
+        } else {
+            AnimatedFigure(replayKey = replayKey, modifier = Modifier.fillMaxSize().padding(20.dp))
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(8.dp),

@@ -115,6 +115,9 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    // 3D avatar + exercise animation rendering (glTF/glb via Filament)
+    implementation(libs.sceneview)
+
     // Auth
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services)

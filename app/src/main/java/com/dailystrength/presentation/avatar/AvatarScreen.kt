@@ -63,7 +63,7 @@ fun AvatarScreen(viewModel: AvatarViewModel = hiltViewModel()) {
         )
 
         Spacer(Modifier.height(20.dp))
-        AvatarPortrait(renderUrl = state.renderUrl)
+        AvatarPortrait(glbUrl = state.glbUrl, renderUrl = state.renderUrl)
 
         Spacer(Modifier.height(16.dp))
         Text(state.stageName, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Black)
@@ -96,14 +96,20 @@ fun AvatarScreen(viewModel: AvatarViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun AvatarPortrait(renderUrl: String?) {
+private fun AvatarPortrait(glbUrl: String?, renderUrl: String?) {
     Card(
         modifier = Modifier.fillMaxWidth().aspectRatio(0.8f),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (renderUrl != null) {
+            if (glbUrl != null) {
+                // Interactive 3D avatar — rotate, zoom and pan.
+                com.dailystrength.presentation.components.Model3dView(
+                    modelUrl = glbUrl,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else if (renderUrl != null) {
                 AsyncImage(
                     model = renderUrl,
                     contentDescription = "Avatar",

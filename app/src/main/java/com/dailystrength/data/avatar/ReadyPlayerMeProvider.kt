@@ -28,6 +28,11 @@ class ReadyPlayerMeProvider @Inject constructor() : AvatarProvider {
         return "$MODELS_BASE/$id.png?pose=$pose&expression=happy&quality=high&size=512"
     }
 
+    override fun glbUrl(avatarId: String?): String? {
+        val id = avatarId?.takeIf { it.isNotBlank() } ?: return null
+        return "$MODELS_BASE/$id.glb"
+    }
+
     override fun editorUrl(): String = "https://readyplayer.me/avatar"
 
     override fun parseAvatarId(input: String): String? {
