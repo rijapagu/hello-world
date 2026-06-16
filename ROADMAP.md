@@ -14,12 +14,13 @@ Estado: **F0 en curso** (esta sesión establece la base funcional offline-first)
 - [x] Tests de dominio (streak, generador, validador IA)
 
 ## Fase 1 — Loop de producto completo
-- [ ] Onboarding + Google Sign-In (Credential Manager)
-- [ ] Diálogo "¿Tennis/Padel/No?" + WorkoutScreen ejecutable (timer, contador de reps por set)
-- [ ] WorkoutCompleteScreen con animación de streak
-- [ ] Pantalla de librería de ejercicios + detalle
-- [ ] Pantalla de estadísticas con gráficas de progresión (Pull/Push/Dip/Ab Wheel)
-- [ ] DataStore de preferencias + feature flags
+- [x] Onboarding + Google Sign-In (Credential Manager, opcional/no bloqueante)
+- [x] Navegación single-activity (NavHost) con gating por onboarding
+- [x] Diálogo "¿Tennis/Padel/No?" + WorkoutScreen ejecutable (contador de reps por serie, descanso)
+- [x] WorkoutCompleteScreen con celebración de streak
+- [x] Pantalla de estadísticas con gráficas de progresión (Dominadas/Flexiones/Fondos/Ab Wheel)
+- [x] DataStore de preferencias + feature flags
+- [ ] Pantalla de librería de ejercicios + detalle (con instrucciones y errores comunes)
 
 ## Fase 2 — Enriquecedores
 - [ ] Samsung Health SDK real (steps + sesiones tennis/padel) + HealthSyncWorker

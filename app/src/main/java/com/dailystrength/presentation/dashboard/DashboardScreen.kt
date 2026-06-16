@@ -2,6 +2,7 @@ package com.dailystrength.presentation.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,20 +29,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.dailystrength.domain.model.ExerciseCategory
 import com.dailystrength.domain.model.SportContext
-import com.dailystrength.domain.model.WorkoutStatus
 import com.dailystrength.domain.usecase.DashboardSnapshot
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun DashboardScreen(
     autoStart: Boolean = false,
+    onOpenWorkout: (Long) -> Unit = {},
+    onOpenStats: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(autoStart) {
         if (autoStart) viewModel.onStartClicked()
+    }
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        viewModel.events.flowWithLifecycle(lifecycleOwner.lifecycle).collectLatest { event ->
+            when (event) {
+                is DashboardEvent.OpenWorkout -> onOpenWorkout(event.workoutId)
+            }
+        }
     }
 
     Column(
@@ -58,20 +71,14 @@ fun DashboardScreen(
                 snapshot = snapshot,
                 generating = state.generating,
                 onStart = viewModel::onStartClicked,
-                onComplete = viewModel::onCompleteToday,
+                onContinue = viewModel::onContinueWorkout,
+                onOpenStats = onOpenStats,
             )
         }
     }
 
     if (state.showSportDialog) {
-        SportDialog(
-            onSelect = viewModel::onSportSelected,
-            onDismiss = viewModel::onDismissSportDialog,
-        )
-    }
-
-    state.celebrateStreak?.let { streak ->
-        StreakCelebrationDialog(streak = streak, onDismiss = viewModel::onCelebrationShown)
+        SportDialog(onSelect = viewModel::onSportSelected, onDismiss = viewModel::onDismissSportDialog)
     }
 }
 
@@ -80,22 +87,17 @@ private fun DashboardContent(
     snapshot: DashboardSnapshot,
     generating: Boolean,
     onStart: () -> Unit,
-    onComplete: () -> Unit,
+    onContinue: () -> Unit,
+    onOpenStats: () -> Unit,
 ) {
-    Text(
-        text = "🔥",
-        fontSize = 40.sp,
-    )
+    Text(text = "🔥", fontSize = 40.sp)
     Text(
         text = snapshot.streak.currentStreak.toString(),
         color = MaterialTheme.colorScheme.primary,
         fontSize = 72.sp,
         fontWeight = FontWeight.Black,
     )
-    Text(
-        text = "días de racha",
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    Text(text = "días de racha", color = MaterialTheme.colorScheme.onSurfaceVariant)
     Spacer(Modifier.height(8.dp))
     Text(
         text = "Récord ${snapshot.streak.longestStreak} · ${snapshot.streak.totalWorkouts} workouts · ${snapshot.avatarStage.displayName}",
@@ -112,12 +114,7 @@ private fun DashboardContent(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(Modifier.padding(20.dp)) {
-            Text(
-                text = "Hoy",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-            )
+            Text("Hoy", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(6.dp))
             Text(
                 text = workout?.let { "${categoryLabel(it.category)} · ${it.plannedDurationMin} min" }
@@ -139,42 +136,36 @@ private fun DashboardContent(
 
     Spacer(Modifier.height(20.dp))
 
-    val completedToday = snapshot.isCompletedToday
     when {
         generating -> CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        completedToday -> Text(
+        snapshot.isCompletedToday -> Text(
             text = "✓ Completado hoy. Nunca cero.",
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
         )
-        workout == null || workout.status == WorkoutStatus.PENDING && workout.exercises.isEmpty() -> StartButton(onStart)
-        workout.status == WorkoutStatus.PENDING -> {
-            Button(
-                onClick = onComplete,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            ) {
-                Text("Completar workout", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            }
+        workout != null -> {
+            PrimaryButton(text = "Continuar workout", onClick = onContinue)
             Spacer(Modifier.height(10.dp))
-            OutlinedButton(onClick = onStart, modifier = Modifier.fillMaxWidth()) {
-                Text("Regenerar")
-            }
+            OutlinedButton(onClick = onStart, modifier = Modifier.fillMaxWidth()) { Text("Regenerar") }
         }
-        else -> StartButton(onStart)
+        else -> PrimaryButton(text = "Empezar", onClick = onStart)
+    }
+
+    Spacer(Modifier.height(16.dp))
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        TextButton(onClick = onOpenStats) { Text("Ver estadísticas") }
     }
 }
 
 @Composable
-private fun StartButton(onStart: () -> Unit) {
+private fun PrimaryButton(text: String, onClick: () -> Unit) {
     Button(
-        onClick = onStart,
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth().height(56.dp),
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
-        Text("Empezar", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        Text(text, fontWeight = FontWeight.Bold, fontSize = 16.sp)
     }
 }
 
@@ -197,19 +188,7 @@ private fun SportDialog(onSelect: (SportContext) -> Unit, onDismiss: () -> Unit)
 
 @Composable
 private fun DialogChoice(label: String, onClick: () -> Unit) {
-    TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Text(label, fontSize = 16.sp)
-    }
-}
-
-@Composable
-private fun StreakCelebrationDialog(streak: Int, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("🔥 $streak días") },
-        text = { Text("Racha actualizada. Nunca cero.") },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Seguir") } },
-    )
+    TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text(label, fontSize = 16.sp) }
 }
 
 private fun categoryLabel(category: ExerciseCategory): String = when (category) {
