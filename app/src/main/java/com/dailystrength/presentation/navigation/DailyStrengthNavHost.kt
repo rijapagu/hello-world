@@ -11,6 +11,7 @@ import com.dailystrength.presentation.dashboard.DashboardScreen
 import com.dailystrength.presentation.library.ExerciseDetailScreen
 import com.dailystrength.presentation.library.LibraryScreen
 import com.dailystrength.presentation.onboarding.OnboardingScreen
+import com.dailystrength.presentation.profile.ProfileScreen
 import com.dailystrength.presentation.stats.StatsScreen
 import com.dailystrength.presentation.workout.WorkoutCompleteScreen
 import com.dailystrength.presentation.workout.WorkoutScreen
@@ -45,6 +46,7 @@ fun DailyStrengthNavHost(
                 onOpenStats = { navController.navigate(Routes.STATS) },
                 onOpenLibrary = { navController.navigate(Routes.LIBRARY) },
                 onOpenAvatar = { navController.navigate(Routes.AVATAR) },
+                onOpenProfile = { navController.navigate(Routes.PROFILE) },
             )
         }
 
@@ -91,6 +93,10 @@ fun DailyStrengthNavHost(
 
         composable(Routes.AVATAR) {
             AvatarScreen()
+        }
+
+        composable(Routes.PROFILE) {
+            ProfileScreen()
         }
     }
 }

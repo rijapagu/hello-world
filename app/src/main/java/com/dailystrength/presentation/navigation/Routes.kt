@@ -7,6 +7,7 @@ object Routes {
     const val STATS = "stats"
     const val LIBRARY = "library"
     const val AVATAR = "avatar"
+    const val PROFILE = "profile"
 
     const val EXERCISE_DETAIL = "exercise/{exerciseId}"
     fun exerciseDetail(exerciseId: String) = "exercise/$exerciseId"

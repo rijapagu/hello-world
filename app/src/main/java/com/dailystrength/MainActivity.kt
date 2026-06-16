@@ -18,6 +18,7 @@ import com.dailystrength.presentation.StartDestination
 import com.dailystrength.presentation.navigation.DailyStrengthNavHost
 import com.dailystrength.presentation.navigation.Routes
 import com.dailystrength.presentation.theme.DailyStrengthTheme
+import com.dailystrength.work.StreakReminderWorker
 import com.dailystrength.work.WidgetRefreshWorker
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         WidgetRefreshWorker.schedule(applicationContext)
+        StreakReminderWorker.schedule(applicationContext)
 
         val autoStartWorkout = intent?.data?.host == "start"
 
