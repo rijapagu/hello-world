@@ -1,0 +1,7 @@
+<resources>
+    <color name="ds_background">#0B0B0F</color>
+    <color name="ds_surface">#16161D</color>
+    <color name="ds_flame">#FF6A2C</color>
+    <color name="ds_on_background">#F5F5F7</color>
+    <color name="ic_launcher_background">#0B0B0F</color>
+</resources>

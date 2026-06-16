@@ -1,0 +1,40 @@
+# Detekt configuration for Daily Strength.
+# buildUponDefaultConfig = true, so this only overrides noisy defaults. Findings are reported but do
+# not fail the build yet (ignoreFailures = true). Tighten incrementally.
+build:
+  maxIssues: 0
+  weights: {}
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 80
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 20
+
+style:
+  MagicNumber:
+    active: false
+  ReturnCount:
+    active: false
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+  UnusedImports:
+    active: true
+  WildcardImport:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: true
+    # Composable functions are PascalCase by convention.
+    ignoreAnnotated: ['Composable']
+
+formatting:
+  active: false
