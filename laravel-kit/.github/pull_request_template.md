@@ -13,7 +13,7 @@
 ## Checklist (Definition of Done)
 
 - [ ] Cada cambio de comportamiento lleva su test (unitario, HTTP o de paridad con el sistema antiguo).
-- [ ] `composer check` pasa en local (Pint + Larastan + Pest).
+- [ ] `composer qa` pasa en local (Pint + Larastan + Pest).
 - [ ] No se han añadido secretos, credenciales ni datos personales reales (ni en fixtures).
 - [ ] Las migraciones de base de datos tienen `down()` o se indica por qué no.
 - [ ] La rama está actualizada con `main` (rebase) y el título del PR sigue Conventional Commits.

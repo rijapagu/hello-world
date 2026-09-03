@@ -60,8 +60,9 @@ Es la *Definition of Done*. Si el cambio no se puede probar, primero se hace pro
 
 Cómo generar el esqueleto: `php artisan make:test --pest NombreTest` (Feature) o `--unit` (Unit).
 
-El CI exige una **cobertura mínima** sobre `app/` (`MIN_COVERAGE` en el workflow). Se sube con el tiempo,
-nunca se baja. Un PR que baja la cobertura por debajo del mínimo no se puede fusionar.
+El CI exige una **cobertura mínima** sobre `app/` (`MIN_COVERAGE` en el workflow). En el primer PR se
+calibra: se mira el % que imprime Pest y se fija ese valor. Desde entonces se sube con el tiempo, nunca
+se baja. Un PR que deja la cobertura por debajo del mínimo no se puede fusionar.
 
 ## 4. Pull Requests
 
@@ -89,7 +90,7 @@ Settings → Rules → Rulesets → *New branch ruleset*:
 ## 5. Antes de subir: comprobación local
 
 ```bash
-composer check          # = composer lint + composer analyse + composer test
+composer qa             # = composer lint + composer analyse + composer test
 composer lint:fix       # Pint arregla el formato solo
 composer test:dirty     # Pest solo para los ficheros modificados (rápido, mientras desarrollas)
 composer test:coverage  # con informe de cobertura (requiere pcov o xdebug)

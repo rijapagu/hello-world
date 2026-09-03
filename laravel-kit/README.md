@@ -9,7 +9,7 @@ verde + un test por cada cambio**. No inventa nada: envuelve lo que el ecosistem
 ```bash
 # desde el clon de este repo
 bash laravel-kit/install.sh /ruta/a/tu-proyecto-laravel
-cd /ruta/a/tu-proyecto-laravel && composer check
+cd /ruta/a/tu-proyecto-laravel && composer qa
 ```
 
 El script copia los ficheros (sin sobrescribir los tuyos: si ya existe uno distinto deja un `.kit` al
@@ -18,6 +18,10 @@ activa los hooks de git. Se puede ejecutar varias veces. Con `--skip-composer` s
 
 Requisitos: PHP ≥ 8.3 y Laravel ≥ 11 (`/up` health check, `bootstrap/app.php`). Pest 5 exige PHP 8.4;
 con PHP 8.3 Composer instalará Pest 4 y todo funciona igual.
+
+Validado (septiembre 2026) sobre un `composer create-project laravel/laravel` recién creado: Laravel 13,
+PHP 8.4, Pest 5.1.3 + pest-plugin-laravel 5.0.1, Larastan 3.11 y Pint 1.30.5. `composer qa` en verde,
+`install.sh` idempotente y el hook `pre-commit` bloqueando un fichero mal formateado.
 
 ## Qué contiene
 

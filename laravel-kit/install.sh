@@ -113,7 +113,7 @@ fi
 cat <<EOF
 
 ✔ Kit instalado. Comprueba que todo está en verde:
-    cd $TARGET && composer check
+    cd $TARGET && composer qa
 
 Pasos manuales pendientes (ver CONTRIBUTING.md):
   1. Sube el proyecto a GitHub y crea el ruleset de la rama main

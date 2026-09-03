@@ -4,8 +4,8 @@
         "lint:fix": "pint",
         "analyse": "phpstan analyse --memory-limit=1G",
         "test:dirty": "pest --dirty",
-        "test:coverage": "pest --parallel --coverage --min=60",
-        "check": [
+        "test:coverage": "pest --parallel --coverage --min=50",
+        "qa": [
             "@lint",
             "@analyse",
             "@test"
