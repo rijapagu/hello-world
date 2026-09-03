@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+    # Para un proyecto legado con muchos avisos: genera una línea base y descomenta la siguiente línea.
+    #   vendor/bin/phpstan analyse --generate-baseline
+    # - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Niveles 0..10. Empieza en 5 y sube un nivel cuando el CI lleve un tiempo en verde.
+    level: 5
+
+    # Descomenta si tus tests usan los helpers de Larastan (p. ej. tipos de factories).
+    # checkModelProperties: true

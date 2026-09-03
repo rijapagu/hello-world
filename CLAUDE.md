@@ -33,6 +33,9 @@ Clean Architecture + MVVM. Regla de dependencias: `presentation → domain ← d
 - Enums se persisten por `name` (contrato estable; no renombrar sin migración de Room).
 - Tests de dominio: JUnit5. Tests con Room/Android: Robolectric (corren bajo el motor `vintage`).
 - Integraciones opcionales se cambian en `di/IntegrationsModule.kt` (un `@Binds`).
+- `laravel-kit/` es un kit portable (workflow git, Pest/Pint/Larastan, CI) para el proyecto PHP/Laravel
+  de la migración, que vive fuera de este repo. Su workflow no se ejecuta aquí; se valida instalándolo
+  en un proyecto Laravel con `install.sh`.
 
 ## Pendiente = acción del propietario (no código)
 - `SamsungHealthDataSource` real (AAR propietaria + partner). Hoy `NoopHealthDataSource`.

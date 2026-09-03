@@ -1,0 +1,15 @@
+{
+    "scripts": {
+        "lint": "pint --test",
+        "lint:fix": "pint",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "test:dirty": "pest --dirty",
+        "test:coverage": "pest --parallel --coverage --min=60",
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ],
+        "hooks:install": "git config core.hooksPath .githooks && echo 'Hooks de git instalados (.githooks)'"
+    }
+}

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Hook pre-push: análisis estático (Larastan) + suite de tests (Pest) antes de subir.
+# Es la red de seguridad local; el CI vuelve a ejecutar lo mismo en el PR.
+# Saltar puntualmente: SKIP_HOOKS=1 git push ...
+set -euo pipefail
+
+[ "${SKIP_HOOKS:-0}" = "1" ] && exit 0
+
+cd "$(git rev-parse --show-toplevel)"
+
+if [ -x vendor/bin/phpstan ]; then
+    echo "pre-push: Larastan…"
+    vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+fi
+
+if [ -x vendor/bin/pest ]; then
+    echo "pre-push: Pest…"
+    vendor/bin/pest --parallel
+fi

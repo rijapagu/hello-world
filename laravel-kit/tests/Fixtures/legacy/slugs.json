@@ -1,0 +1,14 @@
+{
+    "titulo con acentos": {
+        "input": "Café con leche",
+        "expected": "cafe-con-leche"
+    },
+    "espacios multiples": {
+        "input": "  Hola    mundo  ",
+        "expected": "hola-mundo"
+    },
+    "caracteres especiales": {
+        "input": "Año 2026: ¡Racha & fuerza!",
+        "expected": "ano-2026-racha-fuerza"
+    }
+}

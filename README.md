@@ -34,3 +34,6 @@ Requiere Android Studio (Koala+) y Android SDK 34.
 ## Estructura
 `domain/` (modelos, use cases, motor de reglas) · `data/` (Room, Ktor, repos) ·
 `presentation/` (Compose, ViewModels, theme) · `widget/` (Glance) · `work/` (WorkManager) · `di/` (Hilt).
+
+`backend/` (proxy AI Coach en Ktor) · [`laravel-kit/`](laravel-kit/README.md) (método de trabajo git +
+suite de tests + CI para el proyecto PHP/Laravel de la migración; se instala con `laravel-kit/install.sh`).
