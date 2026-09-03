@@ -36,6 +36,7 @@ TARGET="$(cd "$TARGET" && pwd)"
 FILES=(
     CONTRIBUTING.md
     MIGRACION-FOXPRO.md
+    .gitattributes
     .github/workflows/laravel-ci.yml
     .github/pull_request_template.md
     .github/dependabot.yml
@@ -66,6 +67,7 @@ for rel in "${FILES[@]}"; do
     else
         cp "$src" "$dst.kit"
         echo "  ! $rel ya existe y es distinto → revisa $rel.kit y fusiona a mano"
+        [ "$rel" = ".gitattributes" ] && CONFLICTO_GITATTRIBUTES=1
     fi
 done
 chmod +x "$TARGET/.githooks/pre-commit" "$TARGET/.githooks/pre-push"
@@ -126,3 +128,28 @@ Pasos manuales pendientes (ver CONTRIBUTING.md):
   3. Ajusta MIN_COVERAGE en .github/workflows/laravel-ci.yml y 'level' en phpstan.neon a tu punto de partida.
   4. Si los tests de arquitectura fallan en código legado, usa ->ignoring('App\\Legacy') mientras migras.
 EOF
+
+if [ "${CONFLICTO_GITATTRIBUTES:-0}" = "1" ]; then
+    # El proyecto ya traía su .gitattributes (Laravel incluye uno). Lo que importa no es que sea igual
+    # al del kit, sino que garantice LF en los scripts: se lo preguntamos a git en vez de adivinarlo.
+    eol_hooks="$(git -C "$TARGET" check-attr eol -- .githooks/pre-commit 2>/dev/null | sed 's/.*: //')"
+
+    if [ "$eol_hooks" = "lf" ]; then
+        rm -f "$TARGET/.gitattributes.kit"
+        echo
+        echo "✔ Tu .gitattributes ya fuerza LF en los hooks: no hay nada que fusionar."
+    else
+        cat <<'EOF'
+
+⚠ Ya tenías un .gitattributes y no garantiza LF en los hooks. El del kit está en .gitattributes.kit;
+  copia de él AL MENOS estas dos líneas, o fallarán en Windows con
+  "bad interpreter: /usr/bin/env bash^M" en cuanto alguien vuelva a clonar el repositorio:
+
+      *.sh text eol=lf
+      .githooks/* text eol=lf
+
+  Si el repositorio ya guardaba ficheros con CRLF, normalízalos después con:
+      git add --renormalize .
+EOF
+    fi
+fi

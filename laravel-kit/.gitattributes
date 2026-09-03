@@ -1,0 +1,28 @@
+# Normalización de fin de línea.
+#
+# Sin esto, en Windows git suele convertir los ficheros a CRLF al hacer commit, y la próxima persona
+# que clone el repositorio se encuentra con que los scripts no arrancan:
+#
+#   bash: ./.githooks/pre-commit: /usr/bin/env: bad interpreter: No such file or directory
+#
+# El culpable es un \r invisible al final de la primera línea. Estas reglas fuerzan LF en todo lo que
+# tiene que ejecutar bash, independientemente del sistema operativo de cada uno.
+
+# Laravel ya trae esta misma línea en sus proyectos nuevos; se repite aquí para los proyectos que
+# vengan de otro sitio o de una versión antigua.
+* text=auto eol=lf
+
+# Redundante con la línea de arriba, pero explícito a propósito: si alguien la relaja algún día, los
+# scripts que ejecuta bash tienen que seguir en LF sí o sí.
+*.sh text eol=lf
+.githooks/* text eol=lf
+
+# Ficheros binarios: que git no los toque.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.dbf binary
+*.fpt binary
+*.cdx binary
