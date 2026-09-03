@@ -35,6 +35,7 @@ TARGET="$(cd "$TARGET" && pwd)"
 # Ficheros que se copian tal cual (ruta relativa a la raíz del proyecto).
 FILES=(
     CONTRIBUTING.md
+    MIGRACION-FOXPRO.md
     .github/workflows/laravel-ci.yml
     .github/pull_request_template.md
     .github/dependabot.yml
@@ -43,10 +44,13 @@ FILES=(
     pint.json
     phpstan.neon
     tests/Pest.php
+    tests/Support/NormalizadorDbf.php
+    tests/Support/CalculadoraFactura.php
     tests/Unit/Arch/ArchitectureTest.php
-    tests/Unit/LegacyParityExampleTest.php
+    tests/Unit/Migration/FacturasParityTest.php
+    tests/Unit/Migration/NormalizacionDbfTest.php
     tests/Feature/HealthCheckTest.php
-    tests/Fixtures/legacy/slugs.json
+    tests/Fixtures/legacy/facturas.json
 )
 
 echo "▶ Copiando ficheros del kit a $TARGET"

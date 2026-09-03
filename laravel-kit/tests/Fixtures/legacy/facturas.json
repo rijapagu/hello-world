@@ -1,0 +1,46 @@
+{
+    "_comentario": [
+        "Casos exportados del ERP en Visual FoxPro. Cada uno es una factura real cuyos totales imprimió",
+        "el sistema antiguo. El código nuevo debe dar exactamente lo mismo, al céntimo.",
+        "Para exportarlos: SELECT de la cabecera y las líneas, y volcado a este JSON. Cuantos más casos",
+        "raros incluyas (abonos, dtos, varios tipos de IVA, cantidades decimales), menos sustos después."
+    ],
+    "el IVA se redondea por linea, no sobre la base total": {
+        "lineas": [
+            {"cantidad": "1.000", "precio": "2.45", "dto": "0.00", "iva": 21},
+            {"cantidad": "1.000", "precio": "2.45", "dto": "0.00", "iva": 21}
+        ],
+        "esperado": {"base": "4.90", "iva": "1.02", "total": "5.92"}
+    },
+    "descuento de linea antes del IVA": {
+        "lineas": [
+            {"cantidad": "1.000", "precio": "100.00", "dto": "15.00", "iva": 21}
+        ],
+        "esperado": {"base": "85.00", "iva": "17.85", "total": "102.85"}
+    },
+    "redondeo half up en el medio centimo exacto": {
+        "lineas": [
+            {"cantidad": "1.000", "precio": "2.50", "dto": "0.00", "iva": 21}
+        ],
+        "esperado": {"base": "2.50", "iva": "0.53", "total": "3.03"}
+    },
+    "varios tipos de IVA en la misma factura": {
+        "lineas": [
+            {"cantidad": "1.000", "precio": "10.00", "dto": "0.00", "iva": 21},
+            {"cantidad": "1.000", "precio": "10.00", "dto": "0.00", "iva": 10}
+        ],
+        "esperado": {"base": "20.00", "iva": "3.10", "total": "23.10"}
+    },
+    "cantidad decimal (venta por peso)": {
+        "lineas": [
+            {"cantidad": "2.500", "precio": "3.99", "dto": "0.00", "iva": 10}
+        ],
+        "esperado": {"base": "9.98", "iva": "1.00", "total": "10.98"}
+    },
+    "abono: linea negativa": {
+        "lineas": [
+            {"cantidad": "-1.000", "precio": "50.00", "dto": "0.00", "iva": 21}
+        ],
+        "esperado": {"base": "-50.00", "iva": "-10.50", "total": "-60.50"}
+    }
+}

@@ -47,11 +47,15 @@ equipo (propuesta: tipo en inglés, resumen en español). Un commit debe dejar l
 
 ## 3. Regla de oro: cada cambio lleva su test
 
-Es la *Definition of Done*. Si el cambio no se puede probar, primero se hace probable.
+Es la *Definition of Done*. Si el cambio no se puede probar, primero se hace comprobable.
+
+Para lo específico de portar un módulo de Visual FoxPro (extracción del DBF, trampas de codificación y
+redondeo, reconciliación entre los dos sistemas) está [`MIGRACION-FOXPRO.md`](MIGRACION-FOXPRO.md).
 
 | Tipo de cambio | Test que se exige | Dónde |
 |---|---|---|
-| Módulo migrado del sistema antiguo | **Test de paridad**: mismos inputs reales → misma salida. Los casos se exportan del sistema antiguo a un fixture JSON. | `tests/Fixtures/legacy/<modulo>.json` + `tests/Unit/<Modulo>ParityTest.php` (ver `LegacyParityExampleTest.php`) |
+| Módulo migrado del ERP en Visual FoxPro | **Test de paridad**: mismos casos reales → mismo resultado, al céntimo. Los casos se exportan del ERP antiguo a un fixture JSON. | `tests/Fixtures/legacy/<modulo>.json` + `tests/Unit/Migration/<Modulo>ParityTest.php` |
+| Importación de una tabla DBF | Test de las reglas de normalización: borrados, codificación, fechas vacías, importes sin float | `tests/Unit/Migration/NormalizacionDbfTest.php` |
 | Lógica de negocio nueva | Test unitario (PHP puro, sin arrancar Laravel si es posible) | `tests/Unit/` |
 | Endpoint / controlador | Test HTTP con `getJson`/`postJson` + `assertStatus` + `assertJsonStructure` | `tests/Feature/` |
 | Bug | Test que reproduce el fallo **antes** del fix (rojo → verde) | donde viva la lógica |

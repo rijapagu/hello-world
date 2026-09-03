@@ -1,8 +1,9 @@
-# laravel-kit — workflow git + suite de tests para la migración a PHP/Laravel
+# laravel-kit — workflow git + suite de tests para migrar el ERP de Visual FoxPro a Laravel
 
-Kit portable para instalar en un proyecto Laravel (el de la migración, que vive fuera de este repo) el
-mismo método de trabajo que se está acordando para el resto del equipo: **ramas cortas + PR + CI en
-verde + un test por cada cambio**. No inventa nada: envuelve lo que el ecosistema Laravel ya ofrece.
+Kit portable para instalar en el proyecto Laravel de la migración (que vive fuera de este repo) el mismo
+método de trabajo que se está acordando para el resto del equipo: **ramas cortas + PR + CI en verde + un
+test por cada cambio**. No inventa nada: envuelve lo que el ecosistema Laravel ya ofrece, y añade los
+patrones de test propios de una migración desde Visual FoxPro.
 
 ## Instalación en tu proyecto Laravel
 
@@ -20,24 +21,28 @@ Requisitos: PHP ≥ 8.3 y Laravel ≥ 11 (`/up` health check, `bootstrap/app.php
 con PHP 8.3 Composer instalará Pest 4 y todo funciona igual.
 
 Validado (septiembre 2026) sobre un `composer create-project laravel/laravel` recién creado: Laravel 13,
-PHP 8.4, Pest 5.1.3 + pest-plugin-laravel 5.0.1, Larastan 3.11 y Pint 1.30.5. `composer qa` en verde,
-`install.sh` idempotente y el hook `pre-commit` bloqueando un fichero mal formateado.
+PHP 8.4, Pest 5.1.3 + pest-plugin-laravel 5.0.1, Larastan 3.11 y Pint 1.30.5. `composer qa` en verde con
+los 27 tests, `install.sh` idempotente, el hook `pre-commit` bloqueando un fichero mal formateado, y los
+tests de paridad comprobados con una mutación deliberada del cálculo del IVA (fallan como deben).
 
 ## Qué contiene
 
 | Fichero | Para qué |
 |---|---|
 | `CONTRIBUTING.md` | El método de trabajo: ramas, commits, regla "cada cambio lleva su test", PRs, protección de `main`, FAQ. **Léelo primero.** |
+| `MIGRACION-FOXPRO.md` | Lo específico de migrar el ERP: estrategia módulo a módulo, cómo sacar los datos del DBF, las cuatro trampas que corrompen datos en silencio y el checklist por módulo. |
 | `.github/workflows/laravel-ci.yml` | CI con tres checks bloqueantes: Pint, Larastan, Pest (paralelo, sqlite en memoria, cobertura mínima). |
 | `.github/pull_request_template.md` | Checklist de *Definition of Done* en cada PR. |
 | `.github/dependabot.yml` | Actualizaciones semanales de Composer y de las actions. |
 | `.githooks/pre-commit`, `pre-push` | Pint sobre lo que se va a commitear; Larastan + Pest antes de subir. Se activan con `composer hooks:install`. |
 | `pint.json` | Preset `laravel`. |
 | `phpstan.neon` | Larastan nivel 5 sobre `app/`, con instrucciones para línea base en legado. |
-| `composer-scripts.json` | Scripts `lint`, `lint:fix`, `analyse`, `test:dirty`, `test:coverage`, `check`, `hooks:install` que se fusionan en tu `composer.json`. |
-| `tests/Pest.php` | Configuración de Pest: `Feature` con `RefreshDatabase`; expectativa de ejemplo `toBeSlug()`. |
+| `composer-scripts.json` | Scripts `lint`, `lint:fix`, `analyse`, `test:dirty`, `test:coverage`, `qa`, `hooks:install` que se fusionan en tu `composer.json`. |
+| `tests/Pest.php` | Configuración de Pest: `Feature` con `RefreshDatabase`; expectativa `toBeImporte()`. |
 | `tests/Unit/Arch/ArchitectureTest.php` | Presets de arquitectura `php`, `security`, `laravel` + dos reglas propias de ejemplo. |
-| `tests/Unit/LegacyParityExampleTest.php` + `tests/Fixtures/legacy/slugs.json` | **Patrón de test de paridad** para la migración: casos reales del sistema antiguo en JSON, la implementación nueva debe dar lo mismo. |
+| `tests/Unit/Migration/FacturasParityTest.php` + `tests/Fixtures/legacy/facturas.json` | **El patrón central**: casos reales del ERP antiguo en JSON, el código nuevo debe dar lo mismo al céntimo. Fija el IVA por línea y el redondeo *half up* de VFP. |
+| `tests/Unit/Migration/NormalizacionDbfTest.php` | Las cuatro trampas del DBF: registros borrados, codificación CP850/CP1252, fechas vacías e imposibles, importes sin coma flotante. |
+| `tests/Support/` | Implementaciones de ejemplo que hacen verde la suite. **Sustitúyelas por tus clases de `App\`** al migrar cada módulo. |
 | `tests/Feature/HealthCheckTest.php` | Patrón de test HTTP (`GET /up`). |
 
 ## Lo que ya existe en Laravel y el kit reutiliza

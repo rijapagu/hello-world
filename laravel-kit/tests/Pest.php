@@ -22,9 +22,10 @@ pest()->extend(TestCase::class)
 |--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
-| Añade aquí expectativas propias del dominio, p. ej. expect($x)->toBeSlug().
+| Expectativas propias del dominio. Esta comprueba que un importe viaja como
+| cadena decimal y no como float, que es la regla de oro del dinero en el ERP.
 */
 
-expect()->extend('toBeSlug', function () {
-    return $this->toMatch('/^[a-z0-9]+(?:-[a-z0-9]+)*$/');
+expect()->extend('toBeImporte', function () {
+    return $this->toBeString()->toMatch('/^-?\d+\.\d{2}$/');
 });
