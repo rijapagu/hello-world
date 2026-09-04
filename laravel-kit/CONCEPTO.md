@@ -176,20 +176,26 @@ Livewire 4, Dusk, **PHPUnit 11 con 87 ficheros de test** (10 en `Unit`, 68 en `F
 (imagen `php:8.4-fpm-alpine` con Composer 2 y `bcmath` dentro, nginx y MariaDB 11.8). Git local en la
 rama **`master`** y **sin remoto configurado**.
 
-Eso deja cinco cosas que resolver antes de instalar. Ninguna es un defecto del kit: es el encaje.
+Eso deja seis cosas que resolver antes de instalar. Ninguna es un defecto del kit: es el encaje.
 
-1. **Sin remoto en GitHub no hay PR ni CI.** Subir el repositorio es el primer paso; hasta entonces,
+1. 🔴 **Los tests apuntan a la base real con el schema legado.** En `phpunit.xml` las líneas de
+   sqlite en memoria están comentadas, así que la suite usa la conexión de `.env` —la MariaDB de
+   desarrollo— y 67 de los 68 tests de `Feature` no usan `RefreshDatabase`. El kit lo aplicaba a todo
+   `Feature`: habría ejecutado `migrate:fresh` y **borrado todas las tablas**, incluido el schema legado
+   que ninguna migración de Laravel reconstruye. Corregido en el kit —`tests/Pest.php` lo trae comentado,
+   como un Laravel nuevo—, pero al instalar hay que confirmar que sigue apagado.
+2. **Sin remoto en GitHub no hay PR ni CI.** Subir el repositorio es el primer paso; hasta entonces,
    del kit solo funcionan los hooks locales y `composer qa`.
-2. **La rama principal se llama `master`** y el kit apunta a `main` (el workflow, el ruleset y los
+3. **La rama principal se llama `master`** y el kit apunta a `main` (el workflow, el ruleset y los
    ejemplos de `CONTRIBUTING.md`). Hay que renombrar la rama o adaptar esas tres referencias.
-3. **`composer.json` declara `php ^8.2`.** El contenedor ya corre 8.4, así que el problema no es el
+4. **`composer.json` declara `php ^8.2`.** El contenedor ya corre 8.4, así que el problema no es el
    runtime sino el suelo declarado: con `^8.2`, Composer no resolverá la versión de Pest que el kit
    espera. Hay que subirlo a `^8.3` o `^8.4` antes de instalar.
-4. **PHP y Composer viven dentro del contenedor**, no en el Windows anfitrión. `install.sh` los
+5. **PHP y Composer viven dentro del contenedor**, no en el Windows anfitrión. `install.sh` los
    necesita (incluso con `--skip-composer`, porque el paso que fusiona los scripts de `composer.json`
    usa `php -r`), así que lo natural es ejecutarlo **dentro del contenedor `app`**, donde ya hay bash,
    git, PHP 8.4 y Composer 2.
-5. **Los 87 tests existentes están escritos como clases de PHPUnit** y el kit quita `phpunit/phpunit`
+6. **Los 87 tests existentes están escritos como clases de PHPUnit** y el kit quita `phpunit/phpunit`
    como dependencia raíz para poner Pest. Pest corre sobre PHPUnit y normalmente los ejecuta sin
    tocarlos, pero eso **hay que verlo en verde en una rama antes de fusionar**, no darlo por hecho.
 
@@ -217,7 +223,7 @@ Y dos avisos:
 
 2. **Leer, en este orden:** este documento → `CONTRIBUTING.md` → `MIGRACION-FOXPRO.md`.
 
-3. **Resolver los cinco puntos del §4** antes de ejecutar el instalador. Conviene hacerlo en una rama
+3. **Resolver los seis puntos del §4** antes de ejecutar el instalador. Conviene hacerlo en una rama
    (`chore/laravel-kit`), no sobre la principal.
 
 4. **Instalar** desde Git Bash o dentro del contenedor:
@@ -265,7 +271,7 @@ Empieza diciéndome qué hace falta para instalar el kit aquí, sin instalarlo t
   si lo está, exportar desde el propio VFP es la vía más fiable, porque conoce sus tipos.
   `MIGRACION-FOXPRO.md` §3 lista las cuatro vías con lo que cuesta cada una. Para los módulos cuyos
   datos ya viven en MySQL, esa parte no aplica; **el test de paridad sí**.
-- **`master` o `main`**: renombrar la rama del proyecto o adaptar el kit (§4, punto 2).
+- **`master` o `main`**: renombrar la rama del proyecto o adaptar el kit (§4, punto 3).
 - **Idioma de los commits.** Propuesta: tipo en inglés, resumen en español. Sin cerrar.
 - **Quién revisa los PR y con cuántas aprobaciones.** Propuesta: una revisión de otra persona. Con
   dos programadores es viable; conviene confirmarlo antes de activar el ruleset.

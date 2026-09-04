@@ -66,7 +66,7 @@ tests de paridad comprobados con una mutación deliberada del cálculo del IVA (
 | `CONCEPTO.md` | Por qué el kit es así: las decisiones y su motivo, el estado real de cada cosa y lo que aún no está decidido. El documento de traspaso; **si solo vas a leer uno, este.** |
 | `CLAUDE.md` | Instrucciones que carga sola cualquier sesión de Claude Code abierta en el proyecto: invariantes, comandos y convenciones. Si ya tienes uno, el instalador deja `CLAUDE.md.kit` para fusionar. |
 | `CONTRIBUTING.md` | El método de trabajo: ramas, commits, regla "cada cambio lleva su test", PRs, protección de `main`, FAQ. **Léelo antes de tu primer PR.** |
-| `MIGRACION-FOXPRO.md` | Lo específico de migrar el ERP: estrategia módulo a módulo, cómo sacar los datos del DBF, las cuatro trampas que corrompen datos en silencio y el checklist por módulo. |
+| `MIGRACION-FOXPRO.md` | Lo específico de migrar el ERP: estrategia módulo a módulo, cómo sacar los datos del DBF, las cuatro trampas que corrompen datos en silencio, los tests contra el schema legado y el checklist por módulo. |
 | `.github/workflows/laravel-ci.yml` | CI con tres checks bloqueantes: Pint, Larastan, Pest (paralelo, sqlite en memoria, cobertura mínima). |
 | `.github/pull_request_template.md` | Checklist de *Definition of Done* en cada PR. |
 | `.github/dependabot.yml` | Actualizaciones semanales de Composer y de las actions. |
@@ -75,7 +75,7 @@ tests de paridad comprobados con una mutación deliberada del cálculo del IVA (
 | `pint.json` | Preset `laravel`. |
 | `phpstan.neon` | Larastan nivel 5 sobre `app/`, con instrucciones para línea base en legado. |
 | `composer-scripts.json` | Scripts `lint`, `lint:fix`, `analyse`, `test:dirty`, `test:coverage`, `qa`, `hooks:install` que se fusionan en tu `composer.json`. |
-| `tests/Pest.php` | Configuración de Pest: `Feature` con `RefreshDatabase`; expectativa `toBeImporte()`. |
+| `tests/Pest.php` | Configuración de Pest: `Feature` arranca la aplicación; `RefreshDatabase` viene **apagado a propósito** (sobre un schema legado lo borraría). Expectativa `toBeImporte()`. |
 | `tests/Unit/Arch/ArchitectureTest.php` | Presets de arquitectura `php`, `security`, `laravel` + dos reglas propias de ejemplo. |
 | `tests/Unit/Migration/FacturasParityTest.php` + `tests/Fixtures/legacy/facturas.json` | **El patrón central**: casos reales del ERP antiguo en JSON, el código nuevo debe dar lo mismo al céntimo. Fija el IVA por línea y el redondeo *half up* de VFP. |
 | `tests/Unit/Migration/NormalizacionDbfTest.php` | Las cuatro trampas del DBF: registros borrados, codificación CP850/CP1252, fechas vacías e imposibles, importes sin coma flotante. |

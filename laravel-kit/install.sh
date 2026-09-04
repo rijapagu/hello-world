@@ -123,6 +123,11 @@ cat <<EOF
 ✔ Kit instalado. Comprueba que todo está en verde:
     cd $TARGET && composer qa
 
+⚠ ANTES DE LANZAR LOS TESTS: mira a qué base de datos apuntan (phpunit.xml, .env.testing).
+  Si no es desechable —sqlite :memory:, o una base que las migraciones recreen entera—, deja
+  RefreshDatabase apagado en tests/Pest.php: ejecuta migrate:fresh, que BORRA TODAS LAS TABLAS,
+  y un schema legado importado del sistema antiguo no lo reconstruye ninguna migración.
+
 Pasos manuales pendientes (ver CONTRIBUTING.md):
   1. Sube el proyecto a GitHub y crea el ruleset de la rama main
      (PR obligatorio + checks "Formato (Pint)", "Análisis estático (Larastan)", "Tests (PHP 8.4)").

@@ -91,7 +91,29 @@ redondeo es *half up* alejándose del cero, como `ROUND()` de VFP, no el bancari
 Cuando aparezca un descuadre en producción, conviértelo en un caso más del fixture antes de arreglarlo.
 El fixture acaba siendo la memoria de todo lo que el ERP antiguo hacía y nadie había escrito nunca.
 
-## 6. Checklist por módulo migrado
+## 6. Los tests contra el schema legado
+
+Durante la convivencia, tus tests de `Feature` probablemente apunten a la base de datos real con el
+schema del sistema antiguo: es justo lo que hace que prueben algo. Eso trae una consecuencia que hay
+que tener clara desde el primer día.
+
+**No actives `RefreshDatabase` sobre esa base.** El trait ejecuta `migrate:fresh`, que borra todas las
+tablas antes de aplicar las migraciones — y las migraciones de Laravel solo crean lo que has añadido
+tú, nunca el schema legado, que viene de un volcado del sistema antiguo. El resultado es una base
+vacía y una tarde de restauración. Por eso `tests/Pest.php` lo trae comentado.
+
+Las tres salidas, de menos a más trabajo:
+
+| Salida | Cuándo |
+|---|---|
+| Tests de `Unit`, sin base de datos | Toda la lógica de cálculo, incluida la de paridad. Es donde debería vivir la mayor parte. |
+| Una base de test aparte, recreable desde el volcado | Cuando el test necesita datos reales. La recrea un script, no `migrate:fresh`. |
+| `RefreshDatabase` solo en los tests que lo declaran | Para lo que sí es tuyo —tablas nuevas, autenticación— y se puede reconstruir con migraciones. |
+
+Y comprueba dónde apunta `phpunit.xml`: si trae comentadas las líneas de sqlite en memoria, tus tests
+están usando la base de `.env`, que suele ser la de desarrollo.
+
+## 7. Checklist por módulo migrado
 
 Antes de abrir el pull request de un módulo:
 
