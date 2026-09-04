@@ -63,7 +63,9 @@ tests de paridad comprobados con una mutación deliberada del cálculo del IVA (
 
 | Fichero | Para qué |
 |---|---|
-| `CONTRIBUTING.md` | El método de trabajo: ramas, commits, regla "cada cambio lleva su test", PRs, protección de `main`, FAQ. **Léelo primero.** |
+| `CONCEPTO.md` | Por qué el kit es así: las decisiones y su motivo, el estado real de cada cosa y lo que aún no está decidido. El documento de traspaso; **si solo vas a leer uno, este.** |
+| `CLAUDE.md` | Instrucciones que carga sola cualquier sesión de Claude Code abierta en el proyecto: invariantes, comandos y convenciones. Si ya tienes uno, el instalador deja `CLAUDE.md.kit` para fusionar. |
+| `CONTRIBUTING.md` | El método de trabajo: ramas, commits, regla "cada cambio lleva su test", PRs, protección de `main`, FAQ. **Léelo antes de tu primer PR.** |
 | `MIGRACION-FOXPRO.md` | Lo específico de migrar el ERP: estrategia módulo a módulo, cómo sacar los datos del DBF, las cuatro trampas que corrompen datos en silencio y el checklist por módulo. |
 | `.github/workflows/laravel-ci.yml` | CI con tres checks bloqueantes: Pint, Larastan, Pest (paralelo, sqlite en memoria, cobertura mínima). |
 | `.github/pull_request_template.md` | Checklist de *Definition of Done* en cada PR. |

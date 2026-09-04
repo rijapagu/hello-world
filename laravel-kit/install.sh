@@ -34,8 +34,10 @@ TARGET="$(cd "$TARGET" && pwd)"
 
 # Ficheros que se copian tal cual (ruta relativa a la raíz del proyecto).
 FILES=(
+    CONCEPTO.md
     CONTRIBUTING.md
     MIGRACION-FOXPRO.md
+    CLAUDE.md
     .gitattributes
     .github/workflows/laravel-ci.yml
     .github/pull_request_template.md
