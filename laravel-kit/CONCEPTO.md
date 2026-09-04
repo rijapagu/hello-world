@@ -176,7 +176,7 @@ Livewire 4, Dusk, **PHPUnit 11 con 87 ficheros de test** (10 en `Unit`, 68 en `F
 (imagen `php:8.4-fpm-alpine` con Composer 2 y `bcmath` dentro, nginx y MariaDB 11.8). Git local en la
 rama **`master`** y **sin remoto configurado**.
 
-Eso deja seis cosas que resolver antes de instalar. Ninguna es un defecto del kit: es el encaje.
+Eso deja siete cosas que resolver antes de instalar. Ninguna es un defecto del kit: es el encaje.
 
 1. 🔴 **Los tests apuntan a la base real con el schema legado.** En `phpunit.xml` las líneas de
    sqlite en memoria están comentadas, así que la suite usa la conexión de `.env` —la MariaDB de
@@ -195,7 +195,14 @@ Eso deja seis cosas que resolver antes de instalar. Ninguna es un defecto del ki
    necesita (incluso con `--skip-composer`, porque el paso que fusiona los scripts de `composer.json`
    usa `php -r`), así que lo natural es ejecutarlo **dentro del contenedor `app`**, donde ya hay bash,
    git, PHP 8.4 y Composer 2.
-6. **Los 87 tests existentes están escritos como clases de PHPUnit** y el kit quita `phpunit/phpunit`
+6. 🔴 **Composer no puede instalar nada hoy.** El árbol de dependencias arrastra **48 avisos de
+   seguridad en 14 paquetes** —1 crítico (`phpoffice/phpspreadsheet`) y varios altos
+   (`league/commonmark`, `guzzlehttp/guzzle`, `laravel/framework`, `symfony/mime`,
+   `symfony/http-kernel`)— y Composer 2.10 bloquea la resolución por política. **Todo `composer
+   require` o `update` falla**, no solo el del kit. Además, *toda* la rama 11.x de `laravel/framework`
+   (hasta v11.56.1) está marcada: quedarse en `^11.31` no lo limpia. Un `composer update` dentro de las
+   restricciones actuales sí debería limpiar la mayoría de los otros 13 paquetes.
+7. **Los 87 tests existentes están escritos como clases de PHPUnit** y el kit quita `phpunit/phpunit`
    como dependencia raíz para poner Pest. Pest corre sobre PHPUnit y normalmente los ejecuta sin
    tocarlos, pero eso **hay que verlo en verde en una rama antes de fusionar**, no darlo por hecho.
 
@@ -223,7 +230,7 @@ Y dos avisos:
 
 2. **Leer, en este orden:** este documento → `CONTRIBUTING.md` → `MIGRACION-FOXPRO.md`.
 
-3. **Resolver los seis puntos del §4** antes de ejecutar el instalador. Conviene hacerlo en una rama
+3. **Resolver los siete puntos del §4** antes de ejecutar el instalador. Conviene hacerlo en una rama
    (`chore/laravel-kit`), no sobre la principal.
 
 4. **Instalar** desde Git Bash o dentro del contenedor:
